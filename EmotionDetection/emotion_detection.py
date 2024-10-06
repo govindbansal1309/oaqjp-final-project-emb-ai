@@ -14,10 +14,14 @@ def emotion_detector(text_to_analyse):
 
     # Sending a POST request to the sentiment analysis API
     response = requests.post(url, json=myobj, headers=header)
-
+    if response.status_code == 400:
+        emotions = {'anger': None, 'disgust': None, 'fear': None, 'joy': None, 
+        'sadness': None, 'dominant_emotion': None}
+        return emotions
+    
     formatted_response = json.loads(response.text)
     emotions = formatted_response['emotionPredictions'][0]['emotion']
     dominant_emotion = max(emotions, key = emotions.get)
     emotions['dominant_emotion'] = dominant_emotion
-
+    
     return emotions
